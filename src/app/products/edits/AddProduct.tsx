@@ -29,9 +29,7 @@ export type CategoryDataType = {
 
 function AddProduct({ onClose, open, showDrawer }: any) {
   const MyAuthState = useAuthStore();
-  const { data: categoryData } = useFetchData<CategoryDataType>(
-    `/categories?limit=10&page=1&order=ASC`
-  );
+  const { data: categoryData } = useFetchData<CategoryDataType>(`/categories`);
 
   const categories = categoryData?.items || [];
   const [loading, setLoading] = useState(false);

@@ -15,6 +15,7 @@ function EditProduct({
   categories: { id: number; name: string }[];
 }) {
   const MyAuthState = useAuthStore();
+  console.log(product);
 
   const initialValues = product
     ? { ...product, imageUrl: "" }
@@ -42,7 +43,7 @@ function EditProduct({
             axios
               .patch(
                 `https://nt.softly.uz/api/products/${product.id}`,
-                { ...values, categoryId: values.categoryId }, // Match API expected structure
+                { ...values, categoryId: values.categoryId },
                 {
                   headers: {
                     Authorization: `Bearer ${MyAuthState.token}`,

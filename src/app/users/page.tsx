@@ -8,7 +8,7 @@ import AddUsers from "./edits/AddUsers";
 import EditUser from "./edits/EditUser";
 import axios from "axios";
 import useGlobalStore from "@/store/my-store";
-import { handleDelete } from "./edits/DeleteUsers";
+import { Deletedata } from "@/utils/axiosData/deleteData";
 
 export type UserType = {
   id: number;
@@ -117,7 +117,7 @@ function UsersPage() {
                     color="danger"
                     variant="filled"
                     onClick={() => {
-                      handleDelete(id, MyAuthState.token);
+                      Deletedata(`users/`, MyAuthState.token);
                     }}
                   >
                     Delete

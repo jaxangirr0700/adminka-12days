@@ -1,9 +1,9 @@
 "use client";
 import { UserType } from "@/app/users/page";
 import axios from "axios";
-export function PatchtData(apiEndPoint: string, values: any, token: string) {
+export function Postdata(apiEndPoint: string, values: any, token: string) {
   return axios
-    .patch(`https://nt.softly.uz/api/${apiEndPoint}`, values, {
+    .post(`https://nt.softly.uz/api/${apiEndPoint}`, values, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => {
@@ -11,6 +11,6 @@ export function PatchtData(apiEndPoint: string, values: any, token: string) {
       window.location.reload();
     })
     .catch((e) => {
-      console.log(e);
+      console.log(e.response.data);
     });
 }

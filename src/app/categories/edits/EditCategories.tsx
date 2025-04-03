@@ -1,52 +1,40 @@
-import useGlobalStore from "@/store/my-store";
-import { Button, Drawer, Form, Input, InputNumber, Radio, Space } from "antd";
-import { CheckboxGroupProps } from "antd/es/checkbox/Group.js";
+import useAuthStore from "@/store/MyAuthState";
+import { PatchtData } from "@/utils/axiosData/PatchData";
+import { Button, Drawer, Form, Input } from "antd";
 import FormItem from "antd/es/form/FormItem/index.js";
 
-function EditCategories({
-  onCloseEdit,
-  editOpen,
-  EditStudent,
-  setEditStudent,
-}: any) {
-  const optionsActive: CheckboxGroupProps<boolean>["options"] = [
-    { label: "Active", value: true },
-    { label: "inactive", value: false },
-  ];
-  const state = useGlobalStore();
+function EditCategories({ onCloseEdit, open, category }: any) {
+  const MyAuthState = useAuthStore();
+  console.log(category);
+
   return (
     <>
       <Drawer
         title=" Kategoriyani o'zgartirish "
         width={500}
         onClose={onCloseEdit}
-        open={editOpen}
+        open={open}
         styles={{
           body: {
             paddingBottom: 80,
           },
         }}
-        extra={<Space>{/* <Button onClick={onClose}>X</Button> */}</Space>}
         destroyOnClose
       >
         <Form
-          initialValues={EditStudent}
+          initialValues={category}
           onFinish={(values) => {
-            const localStudent = localStorage.getItem("categories");
-            const realStudents = localStudent ? JSON.parse(localStudent) : [];
+            console.log(values);
 
-            const updatedStudents = realStudents.map((student: any) => {
-              if (student.id === EditStudent.id) {
-                return {
-                  ...student,
-                  ...values,
-                };
-              }
-              return student;
-            });
-            useGlobalStore.setState({ categories: updatedStudents });
-            localStorage.setItem("categories", JSON.stringify(updatedStudents));
-            onCloseEdit();
+            const newValues = {
+              name: values.name,
+              description: values.description,
+            };
+            PatchtData(
+              `categories/${category.id}`,
+              newValues,
+              MyAuthState.token
+            );
           }}
         >
           <FormItem
@@ -59,24 +47,13 @@ function EditCategories({
             <Input />
           </FormItem>
           <FormItem
-            label="Mahsulotlar soni"
-            name="productCount"
-            rules={[
-              { required: true, message: "Mahsulotlar soni kiritilmadi!!!" },
-            ]}
+            label="Tarifi"
+            name="description"
+            rules={[{ required: true, message: "Tarifi  kiritilmadi!!!" }]}
           >
-            <InputNumber />
+            <Input />
           </FormItem>
 
-          <FormItem label="Active" name="active">
-            <Radio.Group
-              block
-              options={optionsActive}
-              defaultValue="Erkak"
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </FormItem>
           <FormItem>
             <Button type="primary" htmlType="submit">
               Submits

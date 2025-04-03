@@ -1,8 +1,8 @@
 "use client";
 import useAuthStore from "@/store/MyAuthState";
-import { PatchtData } from "@/utils/axiosData/PatchData";
 import { Button, Drawer, Form, Input, Radio } from "antd";
 import { UserType } from "../page";
+import { PatchtData } from "@/utils/axiosData/PatchData";
 
 function EditUser({
   user,
