@@ -8,7 +8,6 @@ export const Deletedata = (apiEndPoint: string, token: string) => {
     })
     .then((res) => {
       message.success("Kategoriya muvaffaqiyatli o'chirildi!");
-      window.location.reload();
     })
     .catch((error) => {
       console.log(error);

@@ -36,9 +36,7 @@ function ProductPage() {
     `/products?page=${currentPage}&limit=${pageSize}`
   );
   const products = productData?.items || [];
-  const { data: categoryData } = useFetchData<CategoryDataType>(
-    `/categories`
-  );
+  const { data: categoryData } = useFetchData<CategoryDataType>(`/categories`);
 
   const categories = categoryData?.items || [];
 
@@ -146,7 +144,9 @@ function ProductPage() {
               render: (id) => (
                 <Button
                   danger
-                  onClick={() => Deletedata("products/", MyAuthState.token)}
+                  onClick={() =>
+                    Deletedata(`products/${id}`, MyAuthState.token)
+                  }
                 >
                   Delete
                 </Button>

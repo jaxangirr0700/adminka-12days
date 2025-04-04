@@ -8,7 +8,6 @@ import {
 } from "@ant-design/icons";
 import "@ant-design/v5-patch-for-react-19";
 import { Dropdown, MenuProps } from "antd";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

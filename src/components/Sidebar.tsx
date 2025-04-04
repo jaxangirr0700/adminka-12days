@@ -2,6 +2,7 @@
 import useGlobalStore from "@/store/my-store";
 import { DarkLight } from "@/utils/DarkLight";
 import {
+  BankOutlined,
   HomeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -40,6 +41,11 @@ export default function Sidebar() {
       key: "/categories",
       icon: <ProductFilled />,
       label: <Link href="/categories">Categories</Link>,
+    },
+    {
+      key: "/banners",
+      icon: <BankOutlined />,
+      label: <Link href="/banners">Bannerlar</Link>,
     },
     {
       key: "/orders",

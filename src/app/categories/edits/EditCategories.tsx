@@ -5,7 +5,6 @@ import FormItem from "antd/es/form/FormItem/index.js";
 
 function EditCategories({ onCloseEdit, open, category }: any) {
   const MyAuthState = useAuthStore();
-  console.log(category);
 
   return (
     <>
@@ -24,8 +23,6 @@ function EditCategories({ onCloseEdit, open, category }: any) {
         <Form
           initialValues={category}
           onFinish={(values) => {
-            console.log(values);
-
             const newValues = {
               name: values.name,
               description: values.description,

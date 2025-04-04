@@ -19,7 +19,7 @@ function LoginPage() {
       });
       if (typeof window !== "undefined") {
         localStorage.setItem("auth", JSON.stringify(res.data));
-      }
+      } 
     } catch (e) {}
   };
 
