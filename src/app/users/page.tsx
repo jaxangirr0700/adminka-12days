@@ -1,4 +1,5 @@
 "use client";
+import useGlobalStore from "@/store/my-store";
 import useAuthStore from "@/store/MyAuthState";
 import { useFetchData } from "@/utils/axiosData/getData";
 import { Button, Table } from "antd";
@@ -6,9 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import AddUsers from "./edits/AddUsers";
 import EditUser from "./edits/EditUser";
-import axios from "axios";
-import useGlobalStore from "@/store/my-store";
-import { Deletedata } from "@/utils/axiosData/deleteData";
+import { useDeleteData } from "@/utils/axiosData/deleteData";
 
 export type UserType = {
   id: number;
@@ -20,7 +19,7 @@ export type UserType = {
   createdAt: string;
 };
 
-type UserDatatype = {
+export type UserDatatype = {
   items: UserType[];
   message: string;
   page: number;
@@ -33,7 +32,8 @@ function UsersPage() {
   const [AddOpen, setAddOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editUser, setEditUser] = useState<UserType | null>(null);
-  const { data: userData } = useFetchData<UserDatatype>(`/users/`);
+  const { data: userData, fetchData } = useFetchData<UserDatatype>(`/users`);
+  const { deleteData, loading } = useDeleteData();
   const showDrawer = () => setAddOpen(true);
   const onClose = () => setAddOpen(false);
   const onCloseEdit = () => setEditOpen(false);
@@ -51,7 +51,12 @@ function UsersPage() {
 
       <div className="flex flex-col my-5 w-full">
         <AddUsers onClose={onClose} open={AddOpen} showDrawer={showDrawer} />
-        <EditUser onCloseEdit={onCloseEdit} open={editOpen} user={editUser} />
+        <EditUser
+          onCloseEdit={onCloseEdit}
+          open={editOpen}
+          user={editUser}
+          fetchData={fetchData}
+        />
         <div style={{ overflowX: "auto" }}>
           <Table
             className="rounded-lg shadow-lg"
@@ -117,7 +122,7 @@ function UsersPage() {
                     color="danger"
                     variant="filled"
                     onClick={() => {
-                      Deletedata(`users/`, MyAuthState.token);
+                      deleteData(`users/${id}`, MyAuthState.token);
                     }}
                   >
                     Delete

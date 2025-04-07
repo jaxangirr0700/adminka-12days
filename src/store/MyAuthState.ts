@@ -13,9 +13,10 @@ type User = {
 export type MyAuthStateType = {
   token: string;
   user: User | null;
+  logout?: () => void;
 };
 
-const useAuthStore = create<MyAuthStateType>(() => {
+const useAuthStore = create<MyAuthStateType>((set) => {
   const getInitialState = () => {
     if (typeof window === "undefined") {
       return { token: "", user: null };
@@ -33,6 +34,10 @@ const useAuthStore = create<MyAuthStateType>(() => {
     return {
       token: ls.accessToken,
       user: ls.user,
+      logout: () => {
+        localStorage.removeItem("auth");
+        set({ token: "", user: null });
+      },
     };
   };
 

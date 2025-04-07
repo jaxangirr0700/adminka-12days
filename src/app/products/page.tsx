@@ -1,12 +1,12 @@
 "use client";
 import useAuthStore from "@/store/MyAuthState";
-import { Deletedata } from "@/utils/axiosData/deleteData";
 import { useFetchData } from "@/utils/axiosData/getData";
 import { Button, Pagination, Table } from "antd";
 import Image from "next/image";
 import { useState } from "react";
 import AddProduct, { CategoryDataType } from "./edits/AddProduct";
 import EditProduct from "./edits/EditProduct";
+import { useDeleteData } from "@/utils/axiosData/deleteData";
 
 export type ProductType = {
   categoryId: number;
@@ -19,7 +19,7 @@ export type ProductType = {
   stock: number;
 };
 
-type ProductDataType = {
+export type ProductDataType = {
   items: ProductType[];
   message: string;
   total: number;
@@ -37,10 +37,9 @@ function ProductPage() {
   );
   const products = productData?.items || [];
   const { data: categoryData } = useFetchData<CategoryDataType>(`/categories`);
-
   const categories = categoryData?.items || [];
-
   const total = productData?.total || 0;
+  const { deleteData, loading } = useDeleteData();
 
   const showAddDrawer = () => setAddOpen(true);
   const onCloseAdd = () => setAddOpen(false);
@@ -145,7 +144,7 @@ function ProductPage() {
                 <Button
                   danger
                   onClick={() =>
-                    Deletedata(`products/${id}`, MyAuthState.token)
+                    deleteData(`products/${id}`, MyAuthState.token)
                   }
                 >
                   Delete

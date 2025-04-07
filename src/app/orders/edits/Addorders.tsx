@@ -1,10 +1,27 @@
+import { ProductDataType } from "@/app/products/page";
+import { UserDatatype } from "@/app/users/page";
 import useGlobalStore from "@/store/my-store";
+import useAuthStore from "@/store/MyAuthState";
+import { useFetchData } from "@/utils/axiosData/getData";
+import { Postdata } from "@/utils/axiosData/postdata";
 import { getRandomID } from "@/utils/number";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Drawer, Form, Input, InputNumber, Radio, Select } from "antd";
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  message,
+} from "antd";
 
-function AddOrders({ onClose, open, showDrawer }: any) {
+function AddOrders({ onClose, open, showDrawer, getOrders }: any) {
   const state = useGlobalStore();
+  const MyAuthState = useAuthStore();
+  const { data: productData } = useFetchData<ProductDataType>(`/products`);
+  const { data: usersData } = useFetchData<UserDatatype>(`/users`);
 
   return (
     <>
@@ -19,70 +36,55 @@ function AddOrders({ onClose, open, showDrawer }: any) {
         destroyOnClose
       >
         <Form
+          layout="vertical"
           onFinish={(values) => {
-            const new_orders = state.orders.concat({
-              ...values,
-              id: getRandomID(),
-            });
-            useGlobalStore.setState({ orders: new_orders });
-            localStorage.setItem("orders", JSON.stringify(new_orders));
+            const newOrders = {
+              customerId: values.customerId,
+              items: [
+                {
+                  productId: values.productID,
+                  quantity: values.quantity,
+                },
+              ],
+            };
+            Postdata(`orders/`, newOrders, MyAuthState.token);
+            getOrders();
             onClose();
           }}
         >
-          <Form.Item label="Status" name="status">
-            <Radio.Group
-              options={[
-                { label: "Qabul qilindi", value: "qabul_qilindi" },
-                { label: "Yetkazilmoqda", value: "yetkazib_berilmoqda" },
-                { label: "Tugallandi", value: "tugallandi" },
-              ]}
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </Form.Item>
-
           <Form.Item
-            label="Manzil"
-            name="address"
+            label="Foydalanuvchi"
+            name="customerId"
             rules={[{ required: true, message: "Manzil kiritilmadi!!!" }]}
           >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Nechta"
-            name="count"
-            rules={[{ required: true, message: "Nechaligi kiritilmadi!!!" }]}
-          >
-            <InputNumber />
-          </Form.Item>
-
-          <Form.Item
-            label="Mijoz"
-            name="studentID"
-            rules={[{ required: true, message: "Mijozni tanlang!" }]}
-          >
             <Select
-              options={state.students.map((g) => ({
-                label: g.firstName,
+              options={usersData?.items.map((g) => ({
+                label: g.name,
                 value: g.id,
               }))}
+              placeholder="Mahsulotni tanlang"
             />
           </Form.Item>
-
           <Form.Item
             label="Mahsulot"
             name="productID"
             rules={[{ required: true, message: "Mahsulotni tanlang!" }]}
           >
             <Select
-              options={state.products.map((g) => ({
+              options={productData?.items.map((g) => ({
                 label: g.name,
                 value: g.id,
               }))}
+              placeholder="Mahsulotni tanlang"
             />
+          </Form.Item>{" "}
+          <Form.Item
+            label="Soni"
+            name="quantity"
+            rules={[{ required: true, message: "Mahsulotni tanlang!" }]}
+          >
+            <InputNumber />
           </Form.Item>
-
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Submit

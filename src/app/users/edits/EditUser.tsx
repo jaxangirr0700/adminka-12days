@@ -8,10 +8,12 @@ function EditUser({
   user,
   onCloseEdit,
   open,
+  fetchData,
 }: {
   user: UserType | null;
   onCloseEdit: () => void;
   open: boolean;
+  fetchData: () => any;
 }) {
   const MyAuthState = useAuthStore();
 
@@ -29,7 +31,12 @@ function EditUser({
         initialValues={initialValues}
         onFinish={(values: UserType) => {
           if (user) {
-            PatchtData(`users/${user.id}`, values, MyAuthState.token);
+            PatchtData(
+              `users/${user.id}`,
+              values,
+              MyAuthState.token,
+              fetchData
+            );
           }
 
           onCloseEdit();

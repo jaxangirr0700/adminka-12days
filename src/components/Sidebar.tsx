@@ -2,12 +2,13 @@
 import useGlobalStore from "@/store/my-store";
 import { DarkLight } from "@/utils/DarkLight";
 import {
-  BankOutlined,
+  BarChartOutlined,
+  FolderOpenOutlined,
   HomeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   OrderedListOutlined,
-  ProductFilled,
+  PictureOutlined,
   ProductOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -28,6 +29,11 @@ export default function Sidebar() {
       label: <Link href="/">Home</Link>,
     },
     {
+      key: "/statistics",
+      icon: <BarChartOutlined />,
+      label: <Link href="/statistics">Statistika</Link>,
+    },
+    {
       key: "/users",
       icon: <UserOutlined />,
       label: <Link href="/users">Users</Link>,
@@ -39,12 +45,12 @@ export default function Sidebar() {
     },
     {
       key: "/categories",
-      icon: <ProductFilled />,
+      icon: <FolderOpenOutlined />,
       label: <Link href="/categories">Categories</Link>,
     },
     {
       key: "/banners",
-      icon: <BankOutlined />,
+      icon: <PictureOutlined />,
       label: <Link href="/banners">Bannerlar</Link>,
     },
     {

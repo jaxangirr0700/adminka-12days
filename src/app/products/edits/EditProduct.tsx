@@ -15,10 +15,9 @@ function EditProduct({
   categories: { id: number; name: string }[];
 }) {
   const MyAuthState = useAuthStore();
-  console.log(product);
 
   const initialValues = product
-    ? { ...product, imageUrl: "" }
+    ? { ...product, imageUrl: product.imageUrl }
     : {
         name: "",
         description: "",

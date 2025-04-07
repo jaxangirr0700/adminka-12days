@@ -1,57 +1,40 @@
-import useGlobalStore from "@/store/my-store";
-import { OrdersTypes, StudentTypes } from "@/types";
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Select,
-  Space,
-} from "antd";
+import useAuthStore from "@/store/MyAuthState";
+import { PatchtData } from "@/utils/axiosData/PatchData";
+import { Button, Drawer, Form, Radio } from "antd";
 import FormItem from "antd/es/form/FormItem/index.js";
 
-function EditOrders({
-  onCloseEdit,
-  editOpen,
-  EditStudent,
-  setEditStudent,
-}: any) {
-  const state = useGlobalStore();
+function EditOrders({ item, setItem, getOrders, fetchData }: any) {
+  const MyAuthState = useAuthStore();
+
   return (
     <>
       <Drawer
         title="Buyurtmani  o'zgartirish"
         width={500}
-        onClose={onCloseEdit}
-        open={editOpen}
+        onClose={() => {
+          setItem();
+        }}
+        open={item ? true : false}
         styles={{
           body: {
             paddingBottom: 80,
           },
         }}
-        extra={<Space>{/* <Button onClick={onClose}>X</Button> */}</Space>}
         destroyOnClose
       >
         <Form
-          initialValues={EditStudent}
+          layout="vertical"
+          initialValues={item}
           onFinish={(values) => {
-            const localStudent = localStorage.getItem("orders");
-            const realStudents = localStudent ? JSON.parse(localStudent) : [];
+            console.log(values);
 
-            const updatedStudents = realStudents.map((student: OrdersTypes) => {
-              if (student.id === EditStudent.id) {
-                return {
-                  ...student,
-                  ...values,
-                };
-              }
-              return student;
-            });
-            useGlobalStore.setState({ orders: updatedStudents });
-            localStorage.setItem("orders", JSON.stringify(updatedStudents));
-            onCloseEdit();
+            PatchtData(
+              `orders/${item.id}`,
+              values,
+              MyAuthState.token,
+              fetchData
+            );
+            setItem();
           }}
         >
           <FormItem label="Status" name="status">
@@ -59,65 +42,29 @@ function EditOrders({
               block
               options={[
                 {
-                  label: "Qabul qiindi",
-                  value: "qabul_qilindi",
+                  label: "Qabul qilindi",
+                  value: "pending",
                 },
                 {
                   label: "Yetkazilmoqda",
-                  value: "yetkazib_berilmoqda",
+                  value: "processing",
                 },
                 {
-                  label: "Tugallandi",
-                  value: "tugallandi",
+                  label: "Yetkazib berildi",
+                  value: "delivered",
+                },
+                {
+                  label: "Bekor qilindi",
+                  value: "cancelled",
                 },
               ]}
-              defaultValue="Apple"
+              defaultValue="pending"
               optionType="button"
               buttonStyle="solid"
+              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
             />
           </FormItem>
-          <FormItem
-            label="Manzil"
-            name="address"
-            rules={[{ required: true, message: "Manzil kiritilmadi!!!" }]}
-          >
-            <Input />
-          </FormItem>
-          <FormItem
-            label="Nechta"
-            name="count"
-            rules={[{ required: true, message: "Nechaligi kiritilmadi!!!" }]}
-          >
-            <InputNumber />
-          </FormItem>
-          <FormItem
-            label="Mijoz"
-            name="studentID"
-            rules={[{ required: true, message: "Mijozni tanlang!" }]}
-          >
-            <Select
-              options={state.students.map((g) => {
-                return {
-                  label: g.firstName,
-                  value: g.id,
-                };
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="Mahsulot"
-            name="productID"
-            rules={[{ required: true, message: "Mahsulotni tanlang!" }]}
-          >
-            <Select
-              options={state.products.map((g) => {
-                return {
-                  label: g.name,
-                  value: g.id,
-                };
-              })}
-            />
-          </FormItem>
+
           <FormItem>
             <Button type="primary" htmlType="submit">
               Submit

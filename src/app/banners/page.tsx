@@ -1,13 +1,13 @@
 "use client";
 import useAuthStore from "@/store/MyAuthState";
-import { Deletedata } from "@/utils/axiosData/deleteData";
 import { useFetchData } from "@/utils/axiosData/getData";
 import { PatchtData } from "@/utils/axiosData/PatchData";
 import { Button, Switch, Table } from "antd";
 import Image from "next/image";
 import { useState } from "react";
-import EditBanners from "./edits/EditBanner";
 import AddBanners from "./edits/AddBanner";
+import EditBanners from "./edits/EditBanner";
+import { useDeleteData } from "@/utils/axiosData/deleteData";
 
 export type BannerType = {
   id: number;
@@ -45,6 +45,7 @@ function BannersPage() {
   const { data: bannersData, fetchData } = useFetchData<BannersDataType>(
     `/banners?limit=${pageSize}&page=${currentPage}&order=ASC`
   );
+  const { deleteData, loading } = useDeleteData();
 
   const banners = bannersData?.items || [];
   const total = bannersData?.total || 0;
@@ -123,7 +124,8 @@ function BannersPage() {
                   PatchtData(
                     `banners/${banner.id}`,
                     newBanner,
-                    MyAuthState.token
+                    MyAuthState.token,
+                    fetchData
                   );
                   fetchData();
                 }}
@@ -143,7 +145,7 @@ function BannersPage() {
               <Button
                 danger
                 onClick={async () => {
-                  await Deletedata(`banners/${id}`, MyAuthState.token);
+                  await deleteData(`banners/${id}`, MyAuthState.token);
                   fetchData();
                 }}
               >

@@ -1,12 +1,13 @@
 "use client";
 import useAuthStore from "@/store/MyAuthState";
-import { Deletedata } from "@/utils/axiosData/deleteData";
+
 import { useFetchData } from "@/utils/axiosData/getData";
 import { Button, Table } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import AddCategories from "./edits/AddCatigories";
 import EditCategories from "./edits/EditCategories";
+import { useDeleteData } from "@/utils/axiosData/deleteData";
 
 export type CategoryType = {
   id: number;
@@ -33,6 +34,8 @@ function CategoriesPage() {
   const { data: categoryData } = useFetchData<CategoryDataType>(
     `/categories?limit=${pageSize}&page=${currentPage}&order=ASC`
   );
+  const { deleteData, loading } = useDeleteData();
+
   const showAddDrawer = () => setAddOpen(true);
   const onCloseAdd = () => setAddOpen(false);
   const onCloseEdit = () => setEditOpen(false);
@@ -93,7 +96,7 @@ function CategoriesPage() {
               <Button
                 danger
                 onClick={() => {
-                  Deletedata(`categories/${id}`, MyAuthState.token);
+                  deleteData(`categories/${id}`, MyAuthState.token);
                 }}
               >
                 Delete
