@@ -13,27 +13,27 @@ type User = {
 export type MyAuthStateType = {
   token: string;
   user: User | null;
-  logout?: () => void;
+  logout: () => void;
 };
 
 const useAuthStore = create<MyAuthStateType>((set) => {
   const getInitialState = () => {
     if (typeof window === "undefined") {
-      return { token: "", user: null };
+      return { token: "", user: null, logout: () => {} };
     }
 
     const storedAuth = localStorage.getItem("auth");
 
-    if (!storedAuth) {
-      return { token: "", user: null };
+    const ls = storedAuth ? JSON.parse(storedAuth) : undefined;
+    console.log(ls);
+
+    if (ls) {
+      api.defaults.headers.Authorization = `Bearer ${ls.token}`;
     }
 
-    const ls = JSON.parse(storedAuth);
-    api.defaults.headers.Authorization = `Bearer ${ls.token}`;
-
     return {
-      token: ls.accessToken,
-      user: ls.user,
+      token: ls?.accessToken || "",
+      user: ls?.user || null,
       logout: () => {
         localStorage.removeItem("auth");
         set({ token: "", user: null });

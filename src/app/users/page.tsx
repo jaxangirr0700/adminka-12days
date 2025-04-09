@@ -2,12 +2,14 @@
 import useGlobalStore from "@/store/my-store";
 import useAuthStore from "@/store/MyAuthState";
 import { useFetchData } from "@/utils/axiosData/getData";
-import { Button, Table } from "antd";
+import { Button, message, Table } from "antd";
 import Image from "next/image";
 import { useState } from "react";
 import AddUsers from "./edits/AddUsers";
 import EditUser from "./edits/EditUser";
 import { useDeleteData } from "@/utils/axiosData/deleteData";
+import UsersApi from "@/utils/axiosData/UsersApi";
+import { api } from "@/utils/api";
 
 export type UserType = {
   id: number;
@@ -121,8 +123,13 @@ function UsersPage() {
                   <Button
                     color="danger"
                     variant="filled"
-                    onClick={() => {
-                      deleteData(`users/${id}`, MyAuthState.token);
+                    onClick={async () => {
+                      try {
+                        await UsersApi.delete(id, MyAuthState.token);
+                      } catch (e) {
+                        console.log(e);
+                        message.error(`O'chirilishda xato bor `);
+                      }
                     }}
                   >
                     Delete

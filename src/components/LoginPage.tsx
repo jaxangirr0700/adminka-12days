@@ -1,5 +1,6 @@
 "use client";
 import useAuthStore from "@/store/MyAuthState";
+import { api } from "@/utils/api";
 import { Alert, Button, Form, Input } from "antd";
 import axios from "axios";
 import { useEffect } from "react";
@@ -8,7 +9,7 @@ function LoginPage() {
   const MyAuthState = useAuthStore();
   const onFinish = async (values: { email: string; password: string }) => {
     try {
-      const res = await axios.post("https://nt.softly.uz/api/auth/login", {
+      const res = await api.post("auth/login", {
         email: values.email,
         password: values.password,
       });
@@ -17,10 +18,13 @@ function LoginPage() {
         user: res.data.user,
         token: res.data.accessToken,
       });
-      if (typeof window !== "undefined") {
-        localStorage.setItem("auth", JSON.stringify(res.data));
-      } 
-    } catch (e) {}
+      api.defaults.headers.Authorization = `Bearer ${res.data.accessToken}`;
+      console.log(api);
+
+      localStorage.setItem("auth", JSON.stringify(res.data));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
